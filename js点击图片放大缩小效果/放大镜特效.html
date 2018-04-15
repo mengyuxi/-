@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>放大镜特效</title>
+		<link rel="icon" href="img/w1-dl.png" type="image/png" sizes="8*8" />
+		<style>
+			.wrap{
+				position: relative;
+			}
+			.box {
+				position: relative;
+				width: 500px;
+				height: 300px;
+				overflow: hidden;
+				border-radius: 20px;
+			}
+			
+			.box img {
+				width:100%;
+				height:100%;
+			}
+			
+			.smallBox {
+				position: absolute;
+				width: 200px;
+				height: 200px;
+				background: #a17b7b80;
+				display: none;
+			}
+			
+			.bigBox {
+				position: absolute;
+				top: 0;
+				left: 600px;
+				width: 400px;
+				height: 400px;
+				overflow: hidden;
+				border-radius: 20px;
+				display: none;
+			}
+			
+			.bigBox img {
+				position: absolute;
+				top: 0;
+				width: 1000px;
+				height: 600px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="wrap">
+			<div class="box">
+				<div class="smallBox"></div>
+				<img src="img/w1-dl.png" />
+			</div>
+			<div class="bigBox">
+				<img src="img/w1-dl.png" />
+			</div>
+
+		</div>
+        <script>
+        	function getClassName(name){
+        		return document.getElementsByClassName(name)[0];
+        	}
+        	
+        	function getTageName(obj,name){
+        		return obj.getElementsByTagName(name)[0];
+        	}
+        	var wrap=getClassName("wrap"),
+        	    box=getClassName("box"),
+        	    smallBox=getClassName("smallBox"),
+        	    smallImg=getTageName(box,"img"),
+        	    bigBox=getClassName("bigBox"),
+        	    bigImg=getTageName(bigBox,"img");
+        	    //鼠标移入放大镜与大图片显示
+        	    box.onmouseover=function(){
+        	    	smallBox.style.display="block";
+        	    	bigBox.style.display="block";
+        	    }
+        	      //鼠标移出放大镜与大图片隐藏
+        	    box.onmouseout=function(){
+        	    	smallBox.style.display="none";
+        	    	bigBox.style.display="none";
+        	    }
+        	    
+        	     box.onmousemove=function(event){
+        	     	//计算鼠标的X轴Y轴位置
+        	    	var left=event.clientX-wrap.offsetLeft-box.offsetLeft-smallBox.offsetWidth/2,
+        	    	    top=event.clientY-wrap.offsetTop-box.offsetTop-smallBox.offsetWidth/2;
+        	    	if(left<0){
+        	    		left=0;
+        	    		console.log(left);
+        	    	}else if(left>box.offsetWidth-smallBox.offsetWidth){
+        	    		left=box.offsetWidth-smallBox.offsetWidth;
+        	    	}
+        	    	
+        	    	if(top<0){
+        	    		top=0;
+        	    	}else if(top>box.offsetHeight-smallBox.offsetHeight){
+        	    		top=box.offsetHeight-smallBox.offsetHeight;
+        	    	}
+        	    	smallBox.style.left=left+"px";
+        	    	smallBox.style.top=top+"px";
+        	    	
+        	    	/*放大镜移动的距离/(小图片的宽度-放大镜宽度)=大图片移动的距离/(大图片的宽度-大图片显示的宽度)；
+        	    	 * x/A-B=Y/C-D
+        	    	*/
+        	    	var currentX=left/(smallImg.offsetWidth-smallBox.offsetWidth);
+        	    	var currentY=top/(smallImg.offsetHeight-smallBox.offsetHeight);
+        	    	
+        	    	bigImg.style.left=-currentX*(bigImg.offsetWidth-bigBox.offsetWidth)+"px";
+        	    	bigImg.style.top=-currentY*(bigImg.offsetHeight-bigBox.offsetHeight)+"px";
+        	    }
+        </script>
+	</body>
+
+</html>

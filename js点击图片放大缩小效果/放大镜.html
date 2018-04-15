@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			.box{
+				position: relative;
+			}
+			.small{
+				position: relative;
+				width:300px;
+				height: 200px;
+			}
+           .smallBox{
+           	position: absolute;
+           	width:100px;
+           	height: 100px;
+           	z-index: 1;
+           	background: #42303073;          	
+           }
+           .smallBox,.big{
+           	display: none;
+           }
+
+           .small img{
+           	width: 300px;
+           	height: 200px;
+           	border-radius: 20px;
+           }
+           
+           .big{
+           	position: relative;
+           	top: -200px;
+           	left: 320px;
+           	width: 600px;
+           	height: 400px;
+           	overflow: hidden;
+           	border-radius: 20px;
+           }
+           .big img{
+           	position: absolute;
+           	width: 1200px;
+           	height:800px;  	
+           }
+		</style>
+	</head>
+	<body>
+		<div class="box">
+			<div class="small">
+				<div class="smallBox"></div>
+			    <img src="img/w1-dl.png"/>
+			</div>
+			<div class="big">
+			    <img src="img/w1-dl.png"/>
+			</div>
+		</div>
+		<script>
+			!function(){
+				var box=document.querySelector(".box"), 
+				 //小图放大区域与小图
+				    small=document.querySelector(".small"), 
+				    smallBox=document.querySelector(".smallBox"),
+				    //大图放大区域与大图
+				    big=document.querySelector(".big"),
+				    bigImg=document.querySelector(".big img");
+
+                   small.onmouseover=function(){
+                   	 smallBox.style.display="block";
+                   	 big.style.display="block";
+                   }
+                    small.onmouseout=function(){
+                   	 smallBox.style.display="none";
+                   	 big.style.display="none";
+                   }
+                    small.onmousemove=function(event){
+                    	//根据鼠标的X,Y轴减去div的offsetLeft和放大镜的一半得到鼠标当前位置
+                    	console.log(event.type);
+                    	var _event=event ||window.event;
+                    	var left=_event.clientX-box.offsetLeft-small.offsetLeft-smallBox.offsetWidth/2;
+                    	var top=_event.clientY-box.offsetTop-small.offsetTop-smallBox.offsetHeight/2;
+                    	if(left<0){
+                    		left=0;
+                    	}else if(left>(small.offsetWidth-smallBox.offsetWidth)){
+                    		left=small.offsetWidth-smallBox.offsetWidth;
+                    	}
+                    	
+                    	if(top<0){
+                    		top=0;
+                    	}else if(top>(small.offsetHeight-smallBox.offsetHeight)){
+                    		top=small.offsetHeight-smallBox.offsetHeight;
+                    	}
+                    	
+                    	//设置放大镜的位置
+                    	smallBox.style.left=left+"px";
+                    	smallBox.style.top=top+"px";
+                    	
+                    	
+                    	var percentX=left/(small.offsetWidth-smallBox.offsetWidth); 
+                    	var percentY=top/(small.offsetHeight-smallBox.offsetHeight);
+                    	console.log(percentX);
+                    	console.log(percentY);
+                    	console.log(bigImg);
+                    	//设置大图的位置
+                    	bigImg.style.left=-percentX*(bigImg.offsetWidth-big.offsetWidth)+"px";
+                    	bigImg.style.top=-percentY*(bigImg.offsetHeight-big.offsetHeight)+"px";
+                    }
+			}()
+		</script>
+	</body>
+</html>
